@@ -1,0 +1,2 @@
+docker exec -it MyContainer mysql -uroot -pMyPassword
+mysql> show databases;

@@ -1,0 +1,272 @@
+<!DOCTYPE html>
+<html>
+<title> Project Management Tool</title>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">                               <!-- set view to device default -->
+<link rel="stylesheet" type="text/css" href="css/mainstyle.css">                                                       <!-- import stylesheet -->
+<head>
+
+<!--
+<script>
+  window.onerror = function(msg, url, linenumber) {
+      alert('Error message: '+msg+'\nURL: '+url+'\nLine Number: '+linenumber);
+      return true;
+  }
+</script>
+-->
+
+
+
+  <script>
+  // JS function for AJAX requests
+    function showProjects(str) {
+
+      if (str == "") {
+          document.getElementById("list_of_projects").innerHTML = "";
+          return;
+      }
+
+      else {
+          if (window.XMLHttpRequest) {xmlhttp = new XMLHttpRequest();}
+
+          else {xmlhttp = new ActiveXObject("Microsoft.XMLHTTP");}
+
+          xmlhttp.onreadystatechange = function() {
+              if (this.readyState == 4 && this.status == 200) {
+                  document.getElementById("list_of_projects").innerHTML = this.responseText;
+              }
+          };
+
+          xmlhttp.open("GET","showprojects.php?q="+str,true);
+          xmlhttp.send();
+        }
+    }
+
+    window.onload = showProjects;
+  </script>
+
+  <script>
+  function showTasks(pr_name, str) {
+    // argument is print location... should be static
+
+    if (str == "undefined") {
+        document.getElementById("list_of_tasks").innerHTML = "";
+        return;
+    }
+    else {
+        if (window.XMLHttpRequest) {xmlhttp = new XMLHttpRequest();}
+
+        else {xmlhttp = new ActiveXObject("Microsoft.XMLHTTP");}
+        xmlhttp.onreadystatechange = function() {
+            if (this.readyState == 4 && this.status == 200) {
+                document.getElementById("list_of_tasks").innerHTML = this.responseText;
+            }
+        };
+        xmlhttp.open("GET","showtasks.php?q="+str +"&var1=" + pr_name,true);
+        // can we send an additional variable, containing project to be showed?
+        xmlhttp.send();
+      }
+  }
+  //window.onload = showTasks; // do we need this? -- assign this to buttons
+
+  </script>
+
+
+  <script>
+  // hide and show tasks description
+function showTaskDescription(tasker) {
+  var x = document.getElementById(tasker);
+
+  // replaces CSS (as we are getting element by id and not class)
+  // this is abit unoptimal.
+  
+  if (x.style.display === "none") {
+    x.style.display = "block";
+  } else {
+    x.style.display = "none";
+  }
+}
+</script>
+
+<script>
+// dead script for now, moving this to PHP-server side
+function check_complete_and_date(identity,com,due) {
+  $x = document.getElementById(identity);
+
+  if (com == "Y") {
+    x.style.backgroundColor ="blue";}
+
+  if  (com == "P") {
+    x.style.backgroundColor ="lightblue";}
+
+  date = split(due);
+  if (Date(date.toDateString()) => new Date(new Date().toDateString())) {
+    x.style.backgroundColor ="red";}
+  }
+
+</script>
+
+<script>
+function modProject(proj,sy,sm,sd,dy,dm,dd,des) {
+  // fill form with current values
+  // change add to replace += - ==
+  document.forms['project_form']['project_name'].value = proj;
+
+  document.forms['project_form']['start_date1'].value = sy;
+  document.forms['project_form']['start_date2'].value = sm;
+  document.forms['project_form']['start_date3'].value = sd;
+
+  document.forms['project_form']['due_date1'].value = dy;
+  document.forms['project_form']['due_date2'].value = dm;
+  document.forms['project_form']['due_date3'].value = dd;
+
+  document.forms['project_form']['description'].value = des;
+}
+</script>
+
+
+<script>
+function modTask(proj,tsk,pri,com,sy,sm,sd,dy,dm,dd,des) {
+  // fill form with current values
+  // change add to replace += - ==
+  document.forms['task_form']['project_name'].value = proj;
+  document.forms['task_form']['task_name'].value = tsk;
+  document.forms['task_form']['priority'].value = pri;
+  document.forms['task_form']['completed'].value = com;
+
+  document.forms['task_form']['start_date1'].value = sy;
+  document.forms['task_form']['start_date2'].value = sm;
+  document.forms['task_form']['start_date3'].value = sd;
+
+  document.forms['task_form']['due_date1'].value = dy;
+  document.forms['task_form']['due_date2'].value = dm;
+  document.forms['task_form']['due_date3'].value = dd;
+
+  document.forms['task_form']['description'].value = des;
+}
+</script>
+
+</head>
+<body id="main_body">
+
+<!--
+<script>
+var resizeTimer;
+
+$(window).on('resize', function(e) {
+
+  clearTimeout(resizeTimer);
+  resizeTimer = setTimeout(function() {
+    // ON EVENT RESIZE
+    // find current body width
+    var w = window.innerWidth;
+    // get min-width from css
+    var min_width = document.getElementById("main_body").style.minWidth;
+
+    if (w <= min_width){
+      document.getElementByClassName("calculate").style.current_width = min_width;
+    }
+    else {
+      document.getElementByClassName("calculate").style.current_width = w;
+    }
+    }
+  }, 250);
+
+//});
+-->
+</script>
+    <div class="column1">
+      <header class="header">
+        <h1> Project Management Tool </h1>
+      </header>
+    </div>
+
+    <div class="column2-1">
+      <div id="list_of_projects">
+        <b>Person info will be listed here...</b>
+      </div>
+        <!-- AJAX Call showprojects.php to generate box elements -->
+      </div>
+
+    <div class="column2-top-left">
+      <fieldset>
+        <legend> Project Handler </legend>
+          <form method="post" name="project_form" action="projectConnect.php">
+
+            <input type="text" name="project_name" placeholder="Project Name:" style="width:100%">
+            Begin:<label style="padding-right:5px;"></label><input type="text" placeholder="Year" name="start_date1" maxlength="4" class="datebox">
+                          - <input type="text" placeholder="Month"  name="start_date2" maxlength="2" class="datebox">
+                          - <input type="text" placeholder="Day"  name="start_date3" maxlength="2" class="datebox">
+            <br>
+            Due:<label style="padding-right:16.5px;"></label><input type="text" placeholder="Year"  name="due_date1" maxlength="4" class="datebox">
+                          - <input type="text" placeholder="Month"  name="due_date2" maxlength="2" class="datebox">
+                          - <input type="text" placeholder="Day"  name="due_date3" maxlength="2" class="datebox">
+            <br>
+            <textarea name="description" placeholder="Description:"  rows="6" style="width:100%;"> </textarea>
+            <br>
+            <!-- <input type="hidden" name="form_action" value="S"> -->
+
+            <button type="submit" name="form_action" value="S" style="width:24%">New Project</button>
+            <button type="submit" name="form_action" value="M" style="width:24%">Modify</button>
+            <button type="submit" name="form_action" value="D" style="width:24%">Delete</button>
+            <input type="reset" value="Clear Fields" style="width:24%">
+            </form>
+        </fieldset>
+    </div>
+
+    <div class="column2-top-right">
+      <fieldset>
+        <legend> Task Handler </legend>
+          <form method="post" name ="task_form" action="taskConnect.php">
+
+            <input type="text" name="project_name" placeholder="Project Name:" style="width:100%">
+            <input type="text" name="task_name" placeholder="Task Name:" style="width:100%">
+            Priority
+            <select name="priority" size="1">
+                <option value="H">High (Important)</option>
+                <option value="M">Medium</option>
+                <option value="L">Low (redundant)</option>
+            </select>
+            Status
+            <select name="completed" size="1">
+                <option value="N">Not started</option>
+                <option value="P">in progress</option>
+                <option value="Y">completed</option>
+            </select>
+            <br>
+            Begin:<label style="padding-right:5px;"></label><input type="text" placeholder="Year" name="start_date1" maxlength="4" class="datebox">
+                          - <input type="text" placeholder="Month"  name="start_date2" maxlength="2" class="datebox">
+                          - <input type="text" placeholder="Day"  name="start_date3" maxlength="2" class="datebox">
+            <br>
+            Due:<label style="padding-right:16.5px;"></label><input type="text" placeholder="Year"  name="due_date1" maxlength="4" class="datebox">
+                          - <input type="text" placeholder="Month"  name="due_date2" maxlength="2" class="datebox">
+                          - <input type="text" placeholder="Day"  name="due_date3" maxlength="2" class="datebox">
+            <br>
+            <textarea class="formTA" name="description" placeholder="Description:"  rows="3" style="width:100%"> </textarea>
+            <br>
+            <!-- <input type="hidden" name="form_action" value="S"> -->
+
+            <button type="submit" name="form_action" value="S" style="width:24%">New Task</button>
+            <button type="submit" name="form_action" value="M" style="width:24%">Modify</button>
+            <button type="submit" name="form_action" value="D" style="width:24%">Delete</button>
+            <input type="reset" value="Clear Fields" style="width:24%">
+            </form>
+        </fieldset>
+    </div>
+
+    <div class="column2-bot">
+      <div id="list_of_tasks">
+        <b>Task info will be listed here...</b>
+      </div>
+        <!-- AJAX Call showprojects.php to generate box elements -->
+    </div>
+
+    <div class="column1">
+      <footer class="footer">
+        <p> Authorship & Copyright Dan Norström<br>
+            Dn18657 at University of Essex (CSEE)
+        </p>
+      </footer>
+    </div>
+</body>
+</html>

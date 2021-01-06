@@ -1,6 +1,6 @@
 ## project-management-tool
 
-Old project I've dockerized to practice moving applications into containers. Task management tool made with PHP, javaScript, html/css utilizing certain ajax methodologies (except for error messages)
+I've dockerized a old project to practice moving applications into containers. Task management tool made with PHP, javaScript, html/css utilizing certain ajax methodologies (except for error messages)
 
 ## build & run
 requires docker, I recommend using Docker Desktop to clear old images.
